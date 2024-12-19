@@ -1,0 +1,29 @@
+- name: Decrypt stuff
+  copy:
+    src: '../.stuff'
+    dest: '../.s'
+    mode: 0644
+    owner: '{{ user }}'
+  tags:
+    - setup
+
+- name: Get Recommended Nginx Security Parameter
+  become: true
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf
+    dest: ../nginx/options-ssl-nginx.conf
+    mode: 644
+  tags:
+    - setup
+
+- name: Install fail2ban
+  become: true
+  ansible.builtin.apt:
+    name:
+      - fail2ban
+    state: present
+    update_cache: true
+  tags:
+    - docker
+
+# TODO: setup fail2ban and sshd configs
