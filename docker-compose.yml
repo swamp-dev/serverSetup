@@ -1,45 +1,8 @@
 services:
-  sms-db:
-    image: mysql:8.0
-    container_name: sms-db
-    restart: unless-stopped
-    environment:
-      MYSQL_USER: ${WORDPRESS_DB_USER}
-      MYSQL_ROOT_PASSWORD: ${WORDPRESS_DB_PASSWORD}
-      MYSQL_PASSWORD: ${WORDPRESS_DB_PASSWORD}
-      MYSQL_DATABASE: ${WORDPRESS_DB_NAME}
-    volumes:
-      - dbdata:/var/lib/mysql
-    command: '--default-authentication-plugin=mysql_native_password'
-    networks:
-      - sms-network
-
-  sms-wordpress:
-    container_name: sms-wordpress
+  ad-nginx:
+    container_name: ad-nginx
     depends_on:
-      - sms-db
-    image: wordpress:6.6.2-php8.1-fpm
-    restart: unless-stopped
-    volumes:
-      - wordpress:/var/www/html
-    networks:
-      - sms-network
-    environment:
-      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
-      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
-      WORDPRESS_CONFIG_EXTRA: |
-        define('FORCE_SSL_ADMIN', true);
-        if ( isset( $$_SERVER['HTTP_X_FORWARDED_PROTO'] ) && strpos( $$_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false ) {
-          $$_SERVER['HTTPS']='on';
-        }
-
-  sms-nginx:
-    container_name: sms-nginx
-    depends_on:
-      - sms-wordpress
-      - sms-certbot
+      - ad-certbot
     image: nginx:alpine
     restart: unless-stopped
     ports:
@@ -50,26 +13,28 @@ services:
       - ./nginx:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
     networks:
-      - sms-network
+      - ad-network
 
-  sms-certbot:
-    container_name: sms-certbot
+  ad-certbot:
+    container_name: ad-certbot
     image: certbot/certbot
     volumes:
       - certbot-etc:/etc/letsencrypt
       - wordpress:/var/www/html
+    environment:
+      - CERTBOT_EMAIL='adelgado0723@gmail.com'
+      - DOMAIN='andydelgado.dev'
     command:
-      certonly --webroot --webroot-path=/var/www/html --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email --staging -d smsolutions.io -d www.smsolutions.io
+      certonly --webroot --webroot-path=/var/www/html --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email --staging -d ${DOMAIN} -d www.${DOMAIN}
+
       # to check that this worked, run the following command
-      # docker-compose exec sms-nginx ls -la /etc/letsencrypt/live
-      # look for a file with the domain name `smsolutions.io`
+      # docker-compose exec ad-nginx ls -la /etc/letsencrypt/live
+      # look for a file with the domain name `andydelgado.dev`
       # then, change --staging for --force-renewal
 
 volumes:
   certbot-etc:
-  wordpress:
-  dbdata:
 
 networks:
-  sms-network:
+  ad-network:
     driver: bridge
