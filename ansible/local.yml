@@ -5,6 +5,7 @@
   vars:
     home: "{{ lookup('env', 'HOME') }}"
     user: "{{ lookup('env', 'USER') }}"
+    node_version: "16"
 
   pre_tasks:
     - name: Update Package Manager - Debian - Apt

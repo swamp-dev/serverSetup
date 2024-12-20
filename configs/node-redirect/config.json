@@ -1,9 +1,0 @@
-{
-  "port": 8080,
-  "redirects": {
-    "*": {
-      "host": "https://bold.pro/my/andy-delgado-241218144245",
-      "code": 302
-    }
-  }
-}
