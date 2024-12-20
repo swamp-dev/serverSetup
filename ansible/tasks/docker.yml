@@ -63,6 +63,7 @@
     - docker
 
 - name: Start and enable docker daemon
+  become: true
   ansible.builtin.systemd:
     state: started
     name: docker
