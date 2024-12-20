@@ -47,6 +47,7 @@
     - setup
 
 - name: Restart fail2ban
+  become: true
   ansible.builtin.systemd_service:
     state: restarted
     daemon_reload: true
@@ -60,11 +61,12 @@
     src: '{{ home }}/serverSetup/configs/sshd_config'
     dest: '/etc/ssh/sshd_config'
     mode: 0775
-  owner: '{{ user }}'
+    owner: '{{ user }}'
   tags:
     - setup
 
 - name: Restart sshd
+  become: true
   ansible.builtin.systemd_service:
     state: restarted
     daemon_reload: true
