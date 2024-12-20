@@ -67,7 +67,10 @@
 
 - name: Restart sshd
   become: true
-  ansible.builtin.command: 'systemctl restart sshd.service'
+  ansible.builtin.systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: ssh
   tags:
     - setup
 
