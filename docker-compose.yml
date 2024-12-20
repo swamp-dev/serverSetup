@@ -9,7 +9,6 @@ services:
       - '80:80'
       - '443:443'
     volumes:
-      - wordpress:/var/www/html
       - ./nginx:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
     networks:
@@ -20,7 +19,6 @@ services:
     image: certbot/certbot
     volumes:
       - certbot-etc:/etc/letsencrypt
-      - wordpress:/var/www/html
     environment:
       - CERTBOT_EMAIL='adelgado0723@gmail.com'
       - DOMAIN='andydelgado.dev'
