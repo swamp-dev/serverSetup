@@ -19,8 +19,9 @@ services:
     image: certbot/certbot
     volumes:
       - certbot-etc:/etc/letsencrypt
+      - ./:/serverSetup
     command:
-      certonly --webroot --webroot-path=/var/www/html --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email --staging -d ${DOMAIN} -d www.${DOMAIN}
+      certonly --webroot --webroot-path=/serverSetup --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email --staging -d ${DOMAIN} -d www.${DOMAIN}
 
       # to check that this worked, run the following command
       # docker-compose exec ad-nginx ls -la /etc/letsencrypt/live
