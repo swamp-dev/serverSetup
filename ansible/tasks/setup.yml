@@ -11,7 +11,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf
-    dest: ../nginx/options-ssl-nginx.conf
+    dest: ../configs/nginx/options-ssl-nginx.conf
     mode: 644
   tags:
     - setup
@@ -26,4 +26,38 @@
   tags:
     - docker
 
-# TODO: setup fail2ban and sshd configs
+- name: Install fail2ban config file
+  become: true
+  ansible.builtin.copy:
+    src: '{{ home }}/serverSetup/configs/fail2ban.conf'
+    dest: '/etc/fail2ban/fail2ban.conf'
+    mode: 0775
+    owner: '{{ user }}'
+
+- name: Install jail config file
+  become: true
+  ansible.builtin.copy:
+    src: '{{ home }}/serverSetup/configs/jail.conf'
+    dest: '/etc/fail2ban/jail.conf'
+    mode: 0775
+    owner: '{{ user }}'
+
+- name: Restart fail2ban
+  ansible.builtin.systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: fail2ban
+
+- name: Install sshd config file
+  become: true
+  ansible.builtin.copy:
+    src: '{{ home }}/serverSetup/configs/sshd_config'
+    dest: '/etc/ssh/sshd_config'
+    mode: 0775
+  owner: '{{ user }}'
+
+- name: Restart sshd
+  ansible.builtin.systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: sshd

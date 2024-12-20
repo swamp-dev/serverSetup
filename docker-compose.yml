@@ -9,7 +9,7 @@ services:
       - '80:80'
       - '443:443'
     volumes:
-      - ./nginx:/etc/nginx/conf.d
+      - ./configs/nginx:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
     networks:
       - ad-network
@@ -19,9 +19,6 @@ services:
     image: certbot/certbot
     volumes:
       - certbot-etc:/etc/letsencrypt
-    environment:
-      - CERTBOT_EMAIL='adelgado0723@gmail.com'
-      - DOMAIN='andydelgado.dev'
     command:
       certonly --webroot --webroot-path=/var/www/html --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email --staging -d ${DOMAIN} -d www.${DOMAIN}
 
