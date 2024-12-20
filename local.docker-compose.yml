@@ -61,7 +61,7 @@ services:
   #   volumes:
   #     - certbot-etc:/etc/letsencrypt
   #     - wordpress:/var/www/html
-  #   command: certonly --webroot --webroot-path=/var/www/html --email andy@smsolutions.io --agree-tos --no-eff-email --staging -d smsolutions.io -d www.smsolutions.io
+  #   command: certonly --webroot --webroot-path=/var/www/html --email andy@andydelgado.dev --agree-tos --no-eff-email --staging -d andydelgado.dev -d www.andydelgado.dev
 
 volumes:
   # certbot-etc:
