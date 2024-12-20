@@ -5,7 +5,7 @@
   vars:
     home: "{{ lookup('env', 'HOME') }}"
     user: "{{ lookup('env', 'USER') }}"
-    node_version: "16"
+    node_version: '16'
 
   pre_tasks:
     - name: Update Package Manager - Debian - Apt
@@ -20,7 +20,17 @@
       when: ansible_os_family == "Debian"
 
   tasks:
+    - name: decrypt
+      import_tasks: tasks/decrypt.yml
     - name: setup docker
       import_tasks: tasks/docker.yml
-    - name: setup docker
-      import_tasks: tasks/setup.yml
+    - name: nginx
+      import_tasks: tasks/nginx.yml
+    - name: fail2ban
+      import_tasks: tasks/fail2ban.yml
+    - name: sshd
+      import_tasks: tasks/sshd.yml
+    - name: node
+      import_tasks: tasks/node.yml
+    - name: pm2
+      import_tasks: tasks/pm2.yml

@@ -1,0 +1,18 @@
+- name: Install pm2
+  npm:
+    name: pm2
+    global: true
+  tags:
+    - pm2
+
+- name: pm2 update
+  become: true
+  ansible.builtin.command: pm2 update
+  tags:
+    - pm2
+
+- name: pm2 completion install
+  become: true
+  ansible.builtin.command: pm2 completion install
+  tags:
+    - pm2

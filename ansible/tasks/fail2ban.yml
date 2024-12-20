@@ -1,0 +1,38 @@
+- name: Install fail2ban
+  become: true
+  ansible.builtin.apt:
+    name:
+      - fail2ban
+    state: present
+    update_cache: true
+  tags:
+    - fail2ban
+
+- name: Install fail2ban config file
+  become: true
+  ansible.builtin.copy:
+    src: '{{ home }}/serverSetup/configs/fail2ban.conf'
+    dest: '/etc/fail2ban/fail2ban.conf'
+    mode: 0775
+    owner: '{{ user }}'
+  tags:
+    - fail2ban
+
+- name: Install jail config file
+  become: true
+  ansible.builtin.copy:
+    src: '{{ home }}/serverSetup/configs/jail.conf'
+    dest: '/etc/fail2ban/jail.conf'
+    mode: 0775
+    owner: '{{ user }}'
+  tags:
+    - fail2ban
+
+- name: Restart fail2ban
+  become: true
+  ansible.builtin.systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: fail2ban
+  tags:
+    - fail2ban

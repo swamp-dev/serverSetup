@@ -1,0 +1,46 @@
+- name: Install nodejs and npm - Debian
+  become: true
+  ansible.builtin.apt:
+    name: ['nodejs', 'npm']
+  tags:
+    - node
+
+- name: Create npmjs prefix folder if it doesn't exist
+  ansible.builtin.file:
+    path: '{{ home }}/.local/.npm-global'
+    state: directory
+    mode: 0755
+    owner: '{{ user }}'
+  tags:
+    - node
+
+- name: Npmjs global settings
+  ansible.builtin.command: npm config set prefix '{{ home }}/.local/.npm-global'
+  tags:
+    - node
+
+- name: Install N interactive node manager
+  npm:
+    name: n
+    global: true
+  tags:
+    - node
+
+# N needs to write to /usr/local
+# to avoid sudo, we can own the folder
+- name: Create folder for n if it doesn't exist
+  become: true
+  ansible.builtin.file:
+    path: '/usr/local/n/'
+    state: directory
+    mode: 0755
+    owner: '{{ user }}'
+  tags:
+    - node
+
+- name: Install node version specified in ../local.yml
+  become: true
+  ansible.builtin.shell: '{{ home }}/.local/.npm-global/bin/n {{ node_version }}'
+  tags:
+    - node
+
