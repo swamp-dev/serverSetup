@@ -9,8 +9,8 @@ services:
       - '80:80'
       - '443:443'
     volumes:
-      - ./configs/nginx:/etc/nginx/conf.d
-      - certbot-etc:/etc/letsencrypt
+      - ./configs/nginx:/etc/nginx/conf.d:ro
+      - ./certbot/www/:/var/www/certbot/:ro
     networks:
       - ad-network
 
@@ -18,10 +18,10 @@ services:
     container_name: ad-certbot
     image: certbot/certbot
     volumes:
-      - certbot-etc:/etc/letsencrypt
-      - ./:/serverSetup
+      - ./certbot/www/:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/letsencrypt/:rw
     command:
-      certonly --webroot -w /etc/letsencrypt --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email --staging -d ${DOMAIN} -d www.${DOMAIN}
+      certonly --webroot --webroot-path /var/www/certbot/ --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email --staging -d ${DOMAIN} -d www.${DOMAIN}
 
       # to check that this worked, run the following command
       # docker-compose exec ad-nginx ls -la /etc/letsencrypt/live
