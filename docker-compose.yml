@@ -4,32 +4,29 @@ services:
     depends_on:
       - ad-certbot
     image: nginx:alpine
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     restart: unless-stopped
     ports:
       - '80:80'
       - '443:443'
     volumes:
-      - ./configs/nginx:/etc/nginx/conf.d:ro
-      - ./certbot/www/:/var/www/certbot/:ro
+      - ./configs/nginx:/etc/nginx/conf.d
+      - ./certbot/www/:/var/www/certbot/
+      - ./certbot/conf/:/etc/letsencrypt/
     networks:
       - ad-network
 
   ad-certbot:
     container_name: ad-certbot
-    image: certbot/certbot
+    image: certbot/certbot:latest
     volumes:
-      - ./certbot/www/:/var/www/certbot/:ro
-      - ./certbot/conf/:/etc/letsencrypt/:rw
-    command:
-      certonly --webroot --webroot-path /var/www/certbot/ --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email --staging -d ${DOMAIN} -d www.${DOMAIN}
-
-      # to check that this worked, run the following command
-      # docker-compose exec ad-nginx ls -la /etc/letsencrypt/live
-      # look for a file with the domain name `andydelgado.dev`
-      # then, change --staging for --force-renewal
-
-volumes:
-  certbot-etc:
+      - ./certbot/www/:/var/www/certbot/
+      - ./certbot/conf/:/etc/letsencrypt/
+    # 1. Comment out the ssl server block
+    # 2. run docker-compose run --rm ad-certbot certonly --webroot --webroot-path /var/www/certbot/ --email adelgado0723@gmail.com --agree-tos --no-eff-email  -d andydelgado.dev -d www.andydelgado.dev
+    # 3. Uncomment the ssl server block
+    # 4. restart nginx `docker compose exec ad-nginx nginx -s reload`
 
 networks:
   ad-network:
