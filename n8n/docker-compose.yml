@@ -12,12 +12,12 @@ services:
     volumes:
       - ./n8n_data:/home/node/.n8n
     environment:
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=yoursecurepassword
-      - WEBHOOK_TUNNEL_URL=https://n8n.swampmagic.net
-      - N8N_RUNNERS_ENABLED=true
-      - GENERIC_TIMEZONE=America/New_York
+      - WEBHOOK_TUNNEL_URL=https://${DOMAIN}
+      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
+      - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE}
+      - N8N_RUNNERS_ENABLED=${N8N_RUNNERS_ENABLED}
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
     networks:
       - n8n-network
 
@@ -34,6 +34,9 @@ services:
       - ../configs/nginx_n8n:/etc/nginx/conf.d
       - ./certbot/www/:/var/www/certbot/
       - ./certbot/conf/:/etc/letsencrypt/
+    environment:
+      - DOMAIN=${DOMAIN}
+      - EMAIL=${EMAIL}
     networks:
       - n8n-network
 
@@ -43,8 +46,11 @@ services:
     volumes:
       - ./certbot/www/:/var/www/certbot/
       - ./certbot/conf/:/etc/letsencrypt/
+    environment:
+      - DOMAIN=${DOMAIN}
+      - EMAIL=${EMAIL}
     # 1. Comment out the ssl server block
-    # 2. run docker-compose run --rm n8n-certbot certonly --webroot --webroot-path /var/www/certbot/ --email adelgado0723@gmail.com --agree-tos --no-eff-email  -d n8n.swampmagic.net
+    # 2. run docker-compose run --rm n8n-certbot certonly --webroot --webroot-path /var/www/certbot/ --email ${EMAIL} --agree-tos --no-eff-email  -d ${DOMAIN}
     # 3. Uncomment the ssl server block
     # 4. restart nginx `docker compose exec n8n-nginx nginx -s reload`
 
