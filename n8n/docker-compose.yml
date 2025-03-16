@@ -2,18 +2,53 @@ version: '3'
 
 services:
   n8n:
+    container_name: n8n
     image: n8nio/n8n
+    depends_on:
+      - n8n-nginx
     restart: unless-stopped
     ports:
-
-      - "5678:5678"
+      - '5678:5678'
     volumes:
       - ./n8n_data:/home/node/.n8n
-
     environment:
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=admin
       - N8N_BASIC_AUTH_PASSWORD=yoursecurepassword
       - WEBHOOK_TUNNEL_URL=https://yourdomain.com
       - GENERIC_TIMEZONE=America/New_York
+    networks:
+      - n8n-network
 
+  n8n-nginx:
+    container_name: n8n-nginx
+    depends_on:
+      - n8n-certbot
+    image: nginx:alpine
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ../configs/nginx_n8n:/etc/nginx/conf.d
+      - ./certbot/www/:/var/www/certbot/
+      - ./certbot/conf/:/etc/letsencrypt/
+    networks:
+      - n8n-network
+
+  n8n-certbot:
+    container_name: n8n-certbot
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/
+      - ./certbot/conf/:/etc/letsencrypt/
+    # 1. Comment out the ssl server block
+    # 2. run docker-compose run --rm n8n-certbot certonly --webroot --webroot-path /var/www/certbot/ --email adelgado0723@gmail.com --agree-tos --no-eff-email  -d n8n.swampmagic.net
+    # 3. Uncomment the ssl server block
+    # 4. restart nginx `docker compose exec n8n-nginx nginx -s reload`
+
+networks:
+  n8n-network:
+    driver: bridge
