@@ -23,8 +23,6 @@ services:
 
   n8n-nginx:
     container_name: n8n-nginx
-    depends_on:
-      - n8n-certbot
     image: nginx:alpine
     extra_hosts:
       - 'host.docker.internal:host-gateway'
