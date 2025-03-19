@@ -1,7 +1,6 @@
 - name: Backup n8n and upload to AWS S3
   hosts: localhost
 
-  become: yes
 
   vars:
     backup_dir: "{{ lookup('env', 'N8N_ANSIBLE_BACKUP_DIR') }}"

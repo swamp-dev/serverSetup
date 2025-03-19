@@ -1,4 +1,5 @@
 - name: Ensure required dependencies are installed
+  become: yes
   apt:
     name:
       - curl
@@ -7,36 +8,43 @@
     update_cache: yes
 
 - name: Download AWS CLI installer
+  become: yes
   get_url:
     url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
     dest: "/tmp/awscliv2.zip"
     mode: '0644'
 
 - name: Unzip AWS CLI installer
+  become: yes
   unarchive:
     src: "/tmp/awscliv2.zip"
     dest: "/tmp/"
     remote_src: yes
 
 - name: Install AWS CLI
+  become: yes
   command: "/tmp/aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update"
   become: yes
 
 - name: Remove AWS CLI installation files
+  become: yes
   file:
     path: "/tmp/awscliv2.zip"
     state: absent
 
 - name: Remove AWS CLI extracted directory
+  become: yes
   file:
     path: "/tmp/aws"
     state: absent
 
 - name: Verify AWS CLI installation
+  become: yes
   command: "aws --version"
   register: aws_cli_version
   changed_when: false
 
 - name: Debug AWS CLI version
+  become: yes
   debug:
     msg: "Installed AWS CLI version: {{ aws_cli_version.stdout }}"
