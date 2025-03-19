@@ -15,11 +15,12 @@
   roles:
     - backup_n8n
 
-- name: Ensure cron job is scheduled
-  cron:
-    name: "Automated n8n Backup"
-    job: "/bin/bash {{ lookup('env', 'HOME') }}/serverSetup/scripts/backup_n8n.sh >> /var/log/n8n_backup.log 2>&1"
-    minute: "0"
-    hour: "2"
-    user: "ubuntu"
-    state: present
+  tasks:
+    - name: Ensure cron job is scheduled
+      cron:
+        name: "Automated n8n Backup"
+        job: "/bin/bash {{ lookup('env', 'HOME') }}/serverSetup/scripts/backup_n8n.sh >> /var/log/n8n_backup.log 2>&1"
+        minute: "0"
+        hour: "2"
+        user: "ubuntu"
+        state: present
