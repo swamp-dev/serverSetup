@@ -3,18 +3,28 @@
     path: "{{ backup_dir }}"
     state: directory
     mode: '0755'
+  tags:
+    - backup
 
 - name: Stop n8n service (optional)
   command: docker-compose -f /home/ubuntu/n8n/docker-compose.yml down
   ignore_errors: yes
+  tags:
+    - backup
 
 - name: Create backup archive
   command: >
     tar -czvf {{ backup_dir }}/n8n_data_{{ timestamp }}.tar.gz {{ n8n_data_path }}
+  tags:
+    - backup
 
 - name: Start n8n service
   command: docker-compose -f /home/ubuntu/n8n/docker-compose.yml up -d
+  tags:
+    - backup
 
 - name: Upload backup to S3
   command: >
     aws s3 cp {{ backup_dir }}/n8n_data_{{ timestamp }}.tar.gz s3://{{ s3_bucket }}/
+  tags:
+    - backup

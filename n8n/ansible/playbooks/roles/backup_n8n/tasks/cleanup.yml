@@ -1,2 +1,4 @@
 - name: Remove old backups (older than 7 days)
   command: find {{ backup_dir }} -type f -mtime +7 -delete
+  tags:
+    - backup
