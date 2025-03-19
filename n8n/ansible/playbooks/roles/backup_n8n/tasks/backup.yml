@@ -9,7 +9,7 @@
     - backup
 
 - name: Stop n8n service (optional)
-  command: docker-compose -f /home/ubuntu/n8n/docker-compose.yml down
+  command: docker-compose -f {{ n8n_dir }}/docker-compose.yml down
   ignore_errors: yes
   tags:
     - backup
@@ -21,7 +21,7 @@
     - backup
 
 - name: Start n8n service
-  command: docker-compose -f /home/ubuntu/n8n/docker-compose.yml up -d
+  command: docker-compose -f {{ n8n_dir }}/docker-compose.yml up -d
   tags:
     - backup
 
