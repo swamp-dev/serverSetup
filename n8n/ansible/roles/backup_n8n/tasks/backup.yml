@@ -1,40 +1,33 @@
 - name: Ensure backup directory exists
   file:
-    path: "{{ backup_dir }}"
+    path: '{{ backup_dir }}'
     state: directory
     mode: '0755'
     owner: ubuntu
     group: ubuntu
-  tags:
-    - backup
+
 - name: Stop n8n service (optional)
   command: docker-compose -f {{ n8n_dir }}/docker-compose.yml down
   ignore_errors: yes
-  tags:
-    - backup
 
 - name: Create backup archive
   command: >
     tar -czvf {{ backup_dir }}/n8n_data_{{ timestamp }}.tar.gz {{ n8n_data_path }}
-  tags:
-    - backup
 
 - name: Start n8n service
   command: docker-compose -f {{ n8n_dir }}/docker-compose.yml up -d
-  tags:
-    - backup
 
 - name: Ensure AWS credentials directory exists
   become: yes
   file:
-    path: "/root/.aws"
+    path: '/root/.aws'
     state: directory
     mode: '0700'
 
 - name: Configure AWS credentials
   become: yes
   copy:
-    dest: "/root/.aws/credentials"
+    dest: '/root/.aws/credentials'
     content: |
       [default]
       aws_access_key_id = {{ aws_access_key }}
@@ -46,5 +39,3 @@
   become: yes
   command: >
     aws s3 cp {{ backup_dir }}/n8n_data_{{ timestamp }}.tar.gz s3://{{ s3_bucket }}/
-  tags:
-    - backup

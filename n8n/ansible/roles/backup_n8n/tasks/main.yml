@@ -1,3 +1,2 @@
-- include_tasks: install_aws.yml
 - include_tasks: backup.yml
 - include_tasks: cleanup.yml

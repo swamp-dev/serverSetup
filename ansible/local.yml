@@ -34,3 +34,5 @@
       import_tasks: tasks/node.yml
     - name: pm2
       import_tasks: tasks/pm2.yml
+    - name: aws_cli
+      import_tasks: tasks/aws_cli.yml
