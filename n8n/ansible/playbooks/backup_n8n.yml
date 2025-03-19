@@ -1,19 +1,17 @@
 - name: Backup n8n and upload to AWS S3
   hosts: localhost
 
-  pre-tasks:
-
-    - name: Load environment variables
-      hosts: localhost
-      become: yes
-      tasks:
-        - name: Source environment variables
-          shell: |
-            set -o allexport
-            source {{ lookup('env', 'HOME') }}/serverSetup/.s
-            set +o allexport
-          args:
-            executable: /bin/bash
+- name: Load environment variables
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Source environment variables
+      shell: |
+        set -o allexport
+        source {{ lookup('env', 'HOME') }}/serverSetup/.s
+        set +o allexport
+      args:
+        executable: /bin/bash
 
   roles:
     - backup_n8n
