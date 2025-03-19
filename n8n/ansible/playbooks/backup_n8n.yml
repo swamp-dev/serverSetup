@@ -1,26 +1,4 @@
-- name: Load environment variables
-  hosts: localhost
-  become: yes
-  tasks:
-    - name: Source environment variables
-      shell: |
-        set -o allexport
-        source {{ lookup('env', 'HOME') }}/serverSetup/.s
-        set +o allexport
-      args:
-        executable: /bin/bash
-
 - name: Backup n8n and upload to AWS S3
   hosts: localhost
   roles:
     - backup_n8n
-
-  tasks:
-    - name: Ensure cron job is scheduled
-      cron:
-        name: "Automated n8n Backup"
-        job: "/bin/bash {{ lookup('env', 'HOME') }}/serverSetup/scripts/backup_n8n.sh >> /var/log/n8n_backup.log 2>&1"
-        minute: "0"
-        hour: "2"
-        user: "ubuntu"
-        state: present
