@@ -7,7 +7,6 @@
     group: ubuntu
   tags:
     - backup
-
 - name: Stop n8n service (optional)
   command: docker-compose -f {{ n8n_dir }}/docker-compose.yml down
   ignore_errors: yes
@@ -24,6 +23,24 @@
   command: docker-compose -f {{ n8n_dir }}/docker-compose.yml up -d
   tags:
     - backup
+
+- name: Ensure AWS credentials directory exists
+  become: yes
+  file:
+    path: "/root/.aws"
+    state: directory
+    mode: '0700'
+
+- name: Configure AWS credentials
+  become: yes
+  copy:
+    dest: "/root/.aws/credentials"
+    content: |
+      [default]
+      aws_access_key_id = {{ lookup('env', 'AWS_ACCESS_KEY_ID') }}
+      aws_secret_access_key = {{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}
+      region = {{ lookup('env', 'AWS_DEFAULT_REGION') }}
+    mode: '0600'
 
 - name: Upload backup to S3
   become: yes
