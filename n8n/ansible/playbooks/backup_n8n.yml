@@ -1,0 +1,6 @@
+- name: Backup n8n and upload to AWS S3
+  hosts: n8n_servers
+
+  become: yes
+  roles:
+    - backup_n8n

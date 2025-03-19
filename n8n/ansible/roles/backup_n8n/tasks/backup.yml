@@ -1,0 +1,20 @@
+- name: Ensure backup directory exists
+  file:
+    path: "{{ backup_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Stop n8n service (optional)
+  command: docker-compose -f /home/ubuntu/n8n/docker-compose.yml down
+  ignore_errors: yes
+
+- name: Create backup archive
+  command: >
+    tar -czvf {{ backup_dir }}/n8n_data_{{ timestamp }}.tar.gz {{ n8n_data_path }}
+
+- name: Start n8n service
+  command: docker-compose -f /home/ubuntu/n8n/docker-compose.yml up -d
+
+- name: Upload backup to S3
+  command: >
+    aws s3 cp {{ backup_dir }}/n8n_data_{{ timestamp }}.tar.gz s3://{{ s3_bucket }}/
