@@ -26,6 +26,7 @@
     - backup
 
 - name: Upload backup to S3
+  become: yes
   command: >
     aws s3 cp {{ backup_dir }}/n8n_data_{{ timestamp }}.tar.gz s3://{{ s3_bucket }}/
   tags:
