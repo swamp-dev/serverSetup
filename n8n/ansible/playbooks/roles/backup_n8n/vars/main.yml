@@ -1,7 +1,0 @@
-backup_dir: "{{ lookup('env', 'N8N_ANSIBLE_BACKUP_DIR') }}"
-s3_bucket: "{{ lookup('env', 'N8N_ANSIBLE_S3_BUCKET') }}"
-timestamp: "{{ ansible_date_time.iso8601_basic_short }}"
-n8n_data_path: "{{ lookup('env', 'N8N_ANSIBLE_DATA_PATH') }}"
-aws_access_key: "{{ lookup('env', 'N8N_ANSIBLE_AWS_ACCESS_KEY') }}"
-aws_secret_key: "{{ lookup('env', 'N8N_ANSIBLE_AWS_SECRET_KEY') }}"
-aws_region: "{{ lookup('env', 'N8N_ANSIBLE_AWS_REGION') }}"
