@@ -13,6 +13,7 @@ services:
       - ./n8n_data:/home/node/.n8n
       - /usr/local/lib/node_modules:/home/node/node_modules
     environment:
+      - NODE_PATH=/home/node/node_modules
       - WEBHOOK_TUNNEL_URL=https://${DOMAIN}
       - WEBHOOK_URL=https://${DOMAIN}
       - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
