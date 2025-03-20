@@ -47,6 +47,7 @@
 
 # for n8n
 - name: Install msgpackr
+  become: true
   npm:
     name: msgpackr
     global: true
@@ -56,6 +57,7 @@
     - npm-packages
 
 - name: Install axios
+  become: true
   npm:
     name: axios
     global: true
@@ -65,6 +67,7 @@
     - npm-packages
 
 - name: Install dotenv
+  become: true
   npm:
     name: dotenv
     global: true
