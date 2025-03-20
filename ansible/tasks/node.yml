@@ -64,3 +64,11 @@
     - node
     - npm-packages
 
+- name: Install dotenv
+  npm:
+    name: dotenv
+    global: true
+  tags:
+    - n8n
+    - node
+    - npm-packages
