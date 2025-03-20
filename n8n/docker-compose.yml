@@ -11,6 +11,7 @@ services:
       - '5678:5678'
     volumes:
       - ./n8n_data:/home/node/.n8n
+      - /usr/local/lib/node_modules:/home/node/node_modules
     environment:
       - WEBHOOK_TUNNEL_URL=https://${DOMAIN}
       - WEBHOOK_URL=https://${DOMAIN}
