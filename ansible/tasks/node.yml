@@ -75,3 +75,13 @@
     - n8n
     - node
     - npm-packages
+
+- name: Install ws
+  become: true
+  npm:
+    name: ws
+    global: true
+  tags:
+    - n8n
+    - node
+    - npm-packages
