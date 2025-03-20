@@ -44,3 +44,23 @@
   tags:
     - node
 
+
+# for n8n
+- name: Install msgpackr
+  npm:
+    name: msgpackr
+    global: true
+  tags:
+    - n8n
+    - node
+    - npm-packages
+
+- name: Install axios
+  npm:
+    name: axios
+    global: true
+  tags:
+    - n8n
+    - node
+    - npm-packages
+
