@@ -1,8 +1,6 @@
 services:
   ad-nginx:
     container_name: ad-nginx
-    depends_on:
-      - ad-certbot
     image: nginx:alpine
     extra_hosts:
       - 'host.docker.internal:host-gateway'
