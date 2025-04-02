@@ -30,7 +30,6 @@
 - name: Install AWS CLI
   become: yes
   command: "/tmp/aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update"
-  become: yes
 
 - name: Remove AWS CLI installation files
   become: yes

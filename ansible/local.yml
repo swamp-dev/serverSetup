@@ -5,6 +5,12 @@
   vars:
     home: "{{ lookup('env', 'HOME') }}"
     user: "{{ lookup('env', 'USER') }}"
+
+    runner_version: '2.311.0' # github actions
+    runner_url: 'https://github.com/actions/runner/releases/download/v{{ runner_version }}/actions-runner-linux-x64-{{ runner_version }}.tar.gz' # github actions
+    runner_dir: '/opt/actions-runner' # github actions
+    repo_url: "https://github.com/{{ lookup('env', 'GITHUB_USERNAME') }}/{{ lookup('env', 'GITHUB_REPO') }}" # github actions
+    runner_token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
     node_version: '16'
 
   pre_tasks:
@@ -36,3 +42,5 @@
       import_tasks: tasks/pm2.yml
     - name: aws_cli
       import_tasks: tasks/aws_cli.yml
+    - name: github_actions
+      import_tasks: tasks/github_actions.yml
