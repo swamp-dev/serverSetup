@@ -11,7 +11,7 @@
     runner_dir: '/opt/actions-runner' # github actions
     repo_url: "https://github.com/{{ lookup('env', 'GITHUB_USERNAME') }}/{{ lookup('env', 'GITHUB_REPO') }}" # github actions
     runner_token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
-    node_version: '16'
+    node_version: '20'
 
   pre_tasks:
     - name: Update Package Manager - Debian - Apt
