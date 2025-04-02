@@ -44,3 +44,5 @@
       import_tasks: tasks/aws_cli.yml
     - name: github_actions
       import_tasks: tasks/github_actions.yml
+    - name: swap_file
+      import_tasks: tasks/swap_file.yml

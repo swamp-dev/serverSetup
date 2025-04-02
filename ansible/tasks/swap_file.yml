@@ -1,0 +1,53 @@
+- name: Check if swap is already enabled
+  become: yes
+  command: swapon --summary
+  register: swap_status
+  changed_when: false
+  tags:
+    - swap_file
+
+- name: Create swap file if none exists
+  become: yes
+  command: fallocate -l 8G /swapfile
+  when: swap_status.stdout == ""
+  args:
+    creates: /swapfile
+  tags:
+    - swap_file
+
+- name: Set correct permissions on swapfile
+  become: yes
+  file:
+    path: /swapfile
+    mode: '0600'
+    owner: root
+    group: root
+  when: swap_status.stdout == ""
+  tags:
+    - swap_file
+
+- name: Format swapfile
+  become: yes
+  command: mkswap /swapfile
+  when: swap_status.stdout == ""
+  tags:
+    - swap_file
+
+- name: Enable swapfile
+  become: yes
+  command: swapon /swapfile
+  when: swap_status.stdout == ""
+  tags:
+    - swap_file
+
+- name: Persist swapfile in /etc/fstab
+  become: yes
+  mount:
+    name: none
+    src: /swapfile
+    fstype: swap
+    opts: sw
+    state: present
+  when: swap_status.stdout == ""
+  tags:
+    - swap_file
