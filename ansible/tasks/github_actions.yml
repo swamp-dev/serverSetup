@@ -1,12 +1,13 @@
 - name: Ensure dependencies are installed
+  become: yes
   apt:
     name: [curl, tar]
     state: present
-  become: yes
   tags:
     - github_actions
 
 - name: Create runner directory
+  become: yes
   file:
     path: '{{ runner_dir }}'
     state: directory
@@ -15,6 +16,7 @@
     - github_actions
 
 - name: Download GitHub runner tarball
+  become: yes
   get_url:
     url: '{{ runner_url }}'
     dest: '{{ runner_dir }}/actions-runner.tar.gz'
@@ -23,6 +25,7 @@
     - github_actions
 
 - name: Extract runner tarball
+  become: yes
   unarchive:
     src: '{{ runner_dir }}/actions-runner.tar.gz'
     dest: '{{ runner_dir }}'
@@ -31,6 +34,7 @@
     - github_actions
 
 - name: Configure the GitHub runner
+  become: yes
   command: './config.sh --url {{ repo_url }} --token {{ runner_token }} --unattended'
   args:
     chdir: '{{ runner_dir }}'
@@ -40,6 +44,7 @@
     - github_actions
 
 - name: Install GitHub runner service
+  become: yes
   command: './svc.sh install'
   args:
     chdir: '{{ runner_dir }}'
@@ -47,7 +52,7 @@
     - github_actions
 
 - name: Start GitHub runner service
-
+  become: yes
   command: './svc.sh start'
   args:
     chdir: '{{ runner_dir }}'
