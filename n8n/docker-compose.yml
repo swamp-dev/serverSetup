@@ -3,7 +3,7 @@ version: '3'
 services:
   n8n:
     container_name: n8n
-    image: n8nio/n8n
+    image: n8nio/n8n:stable
     depends_on:
       - n8n-nginx
     restart: unless-stopped
